@@ -28,9 +28,11 @@ import twitch from './util/twitch';
         const chat = document.querySelector('.chat-list__lines > .simplebar-scroll-content > .simplebar-content > [role="log"]');
         const textBox = document.querySelector("textarea[data-a-target='chat-input']");
         if (textBox && txtBox !== textBox) {
-            textBox.addEventListener('keyup', () => {
+            console.log("Set up textbox listener");
+            textBox.addEventListener('keyup', e => {
                 createPastaPreview(textBox.value);
             });
+            txtBox = textBox;
         }
         if (chat && chat !== observingChat) {
             // Set up chat observer and discard chat loading observer
@@ -61,34 +63,18 @@ import twitch from './util/twitch';
     function onChatMessage(el) {
         const msg = twitch.getChatMessageObject(el);
         // Found a pasta preview message
-        const chatLines = document.querySelector(".chat-list__lines [role='log']");
         if (msg.user.userType === '$$PASTA-PREVIEW$$') {
-            // Remove the existing preview
-            if (pastaPreview && chatLines && chatLines.contains(pastaPreview)) {
-                chatLines.removeChild(pastaPreview);
-            }
             stylePastaPreview(el);
+            if (pastaPreview) {
+                pastaPreview.style.display = "none";
+            }
             pastaPreview = el;
-            return;
-        } else if (pastaPreview) { // Got other message, move preview to bottom
-            chatLines.appendChild(pastaPreview);
         }
-        /*el.addEventListener('mouseenter', ev => {
-            console.log(`over ${el.innerText}`);
-        });
-
-        el.addEventListener('mouseleave', ev => {
-            console.log(`out ${el.innerText}`);
-        });*/
     }
 
     let pastaPreview;
-    let currentPastaPreview = undefined;
 
     function createPastaPreview(text) {
-        if (text === currentPastaPreview) {
-            return;
-        }
         if (text) {
             const currentChat = twitch.getCurrentChat().props;
             const user = currentChat.currentUserLogin;
@@ -109,10 +95,9 @@ import twitch from './util/twitch';
                 channel: channel,
                 _pastaPreview: true
             };
-            currentPastaPreview = text;
             twitch.getChatController().chatService.onChatMessageEvent(messageEvent);
         } else if (pastaPreview) {
-            document.querySelector(".chat-list__lines [role='log']").removeChild(pastaPreview);
+            pastaPreview.style.display = "none";
             pastaPreview = undefined;
         }
     }
@@ -135,6 +120,12 @@ import twitch from './util/twitch';
                 #dfdfdf 30px
             )`;
         }
+        const chatInput = document.querySelector(".chat-input");
+        const chatList = document.querySelector(".chat-list");
+        el.style.position = "absolute";
+        el.style.top = ((chatInput.getBoundingClientRect().top - chatList.getBoundingClientRect().top) - el.getBoundingClientRect().height) + "px";
+        el.style.width = chatInput.getBoundingClientRect().width + "px";
+        el.style.zIndex = "99999";
     }
 
     window.Jam = {
