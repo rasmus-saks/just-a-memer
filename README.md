@@ -1,5 +1,5 @@
 # Just A Memer
-Browser extensions to make Twitch memeing great again FeelsGoodMan
+Browser extension to make Twitch memeing great again FeelsGoodMan
 
 ## Installation
  ```
