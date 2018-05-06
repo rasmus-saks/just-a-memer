@@ -20,7 +20,7 @@ import twitch from './util/twitch';
         });
     });
 
-    new MutationObserver((mutations, observer) => {
+    new MutationObserver(() => {
         setupChatObserver();
     }).observe(document.body, mutationConfig);
 
@@ -29,7 +29,7 @@ import twitch from './util/twitch';
         const textBox = document.querySelector("textarea[data-a-target='chat-input']");
         if (textBox && txtBox !== textBox) {
             console.log("Set up textbox listener");
-            textBox.addEventListener('keyup', e => {
+            textBox.addEventListener('keyup', () => {
                 createPastaPreview(textBox.value);
             });
             txtBox = textBox;
@@ -121,9 +121,8 @@ import twitch from './util/twitch';
             )`;
         }
         const chatInput = document.querySelector(".chat-input");
-        const chatList = document.querySelector(".chat-list");
         el.style.position = "absolute";
-        el.style.top = ((chatInput.getBoundingClientRect().top - chatList.getBoundingClientRect().top) - el.getBoundingClientRect().height) + "px";
+        el.style.bottom = "0";
         el.style.width = chatInput.getBoundingClientRect().width + "px";
         el.style.zIndex = "99999";
     }
