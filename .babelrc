@@ -1,0 +1,11 @@
+{
+  "presets": [
+    "@babel/env"
+  ],
+  "plugins": [
+    "transform-class-properties",
+    "transform-es2015-modules-commonjs",
+    "syntax-jsx",
+    ["transform-react-jsx", {"pragma": "dom"}]
+  ]
+}

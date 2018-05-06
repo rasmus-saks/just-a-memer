@@ -1,12 +1,12 @@
-const REACT_ROOT = '#root div';
+const REACT_ROOT = "#root div";
 const CHAT_CONTAINER = 'section[data-test-selector="chat-room-component-layout"]';
-const VOD_CHAT_CONTAINER = '.qa-vod-chat';
-const CHAT_LIST = '.chat-list';
-const PLAYER = '.player';
+const VOD_CHAT_CONTAINER = ".qa-vod-chat";
+const CHAT_LIST = ".chat-list";
+const PLAYER = ".player";
 
 function getReactInstance(element) {
     for (const key in element) {
-        if (key.startsWith('__reactInternalInstance$')) {
+        if (key.startsWith("__reactInternalInstance$")) {
             return element[key];
         }
     }
@@ -26,7 +26,7 @@ function searchReactParents(node, predicate, maxDepth = 15, depth = 0) {
         return null;
     }
 
-    const {'return': parent} = node;
+    const {"return": parent} = node;
     if (parent) {
         return searchReactParents(parent, predicate, maxDepth, depth + 1);
     }
@@ -36,45 +36,8 @@ function searchReactParents(node, predicate, maxDepth = 15, depth = 0) {
 
 let currentUser;
 let currentChannel;
-const clipInfo = window.clipInfo;
 
 export default {
-    updateCurrentChannel() {
-        let rv;
-
-        if (clipInfo) {
-            rv = {
-                id: clipInfo.broadcaster_id.toString(),
-                name: clipInfo.broadcaster_login,
-                displayName: clipInfo.broadcaster_display_name,
-                avatar: clipInfo.broadcaster_logo
-            };
-        }
-
-        const currentChat = this.getCurrentChat();
-        if (currentChat && currentChat.props && currentChat.props.channelID) {
-            const {channelID, channelLogin, channelDisplayName} = currentChat.props;
-            rv = {
-                id: channelID.toString(),
-                name: channelLogin,
-                displayName: channelDisplayName
-            };
-        }
-
-        const currentVodChat = this.getCurrentVodChat();
-        if (currentVodChat && currentVodChat.props && currentVodChat.props.data && currentVodChat.props.data.video) {
-            const {owner: {id, login}} = currentVodChat.props.data.video;
-            rv = {
-                id: id.toString(),
-                name: login,
-                displayName: login
-            };
-        }
-
-        currentChannel = rv;
-
-        return rv;
-    },
 
     getReactInstance,
 
@@ -91,7 +54,7 @@ export default {
         try {
             const node = searchReactParents(
                 getReactInstance(document.querySelector(REACT_ROOT)),
-                n => n.stateNode && n.stateNode.store
+                (n) => n.stateNode && n.stateNode.store,
             );
             store = node.stateNode.store;
         } catch (_) {
@@ -105,7 +68,7 @@ export default {
         try {
             const node = searchReactParents(
                 getReactInstance(document.querySelector(REACT_ROOT)),
-                n => n.stateNode && n.stateNode.context && n.stateNode.context.router
+                (n) => n.stateNode && n.stateNode.context && n.stateNode.context.router,
             );
             router = node.stateNode.context.router;
         } catch (_) {
@@ -119,7 +82,7 @@ export default {
         try {
             const node = searchReactParents(
                 getReactInstance(document.querySelector(PLAYER)),
-                n => n.stateNode && n.stateNode.player
+                (n) => n.stateNode && n.stateNode.player,
             );
             player = node.stateNode;
         } catch (_) {
@@ -133,7 +96,7 @@ export default {
         try {
             const node = searchReactParents(
                 getReactInstance(document.querySelector(CHAT_CONTAINER)),
-                n => n.stateNode && n.stateNode.chatBuffer
+                (n) => n.stateNode && n.stateNode.chatBuffer,
             );
             chatController = node.stateNode;
         } catch (_) {
@@ -165,7 +128,7 @@ export default {
         try {
             const node = searchReactParents(
                 getReactInstance(document.querySelector(CHAT_LIST)),
-                n => n.stateNode && n.stateNode.props && n.stateNode.scroll
+                (n) => n.stateNode && n.stateNode.props && n.stateNode.scroll,
             );
             chatScroller = node.stateNode;
         } catch (_) {
@@ -179,7 +142,7 @@ export default {
         try {
             const node = searchReactParents(
                 getReactInstance(document.querySelector(CHAT_CONTAINER)),
-                n => n.stateNode && n.stateNode.props && n.stateNode.props.onSendMessage
+                (n) => n.stateNode && n.stateNode.props && n.stateNode.props.onSendMessage,
             );
             currentChat = node.stateNode;
         } catch (_) {
@@ -193,7 +156,7 @@ export default {
         try {
             const node = searchReactParents(
                 getReactInstance(document.querySelector(VOD_CHAT_CONTAINER)),
-                n => n.stateNode && n.stateNode.props && n.stateNode.props.data && n.stateNode.props.data.video
+                (n) => n.stateNode && n.stateNode.props && n.stateNode.props.data && n.stateNode.props.data.video,
             );
             currentVodChat = node.stateNode;
         } catch (_) {
@@ -204,24 +167,24 @@ export default {
 
     sendChatAdminMessage(body) {
         const chatController = this.getChatController();
-        if (!chatController) return;
+        if (!chatController) { return; }
 
         chatController.chatService.onChatNoticeEvent({
             msgid: Date.now(),
             body,
-            channel: `#${chatController.chatService.channelLogin}`
+            channel: `#${chatController.chatService.channelLogin}`,
         });
     },
 
     sendChatMessage(message) {
         const currentChat = this.getCurrentChat();
-        if (!currentChat) return;
+        if (!currentChat) { return; }
         currentChat.props.onSendMessage(message);
     },
 
     getCurrentUserIsModerator() {
         const currentChat = this.getCurrentChat();
-        if (!currentChat) return;
+        if (!currentChat) { return; }
         return currentChat.props.isCurrentUserModerator;
     },
 
@@ -240,7 +203,7 @@ export default {
         try {
             node = searchReactParents(
                 getReactInstance(element),
-                n => n.stateNode && n.stateNode.props
+                (n) => n.stateNode && n.stateNode.props,
             );
         } catch (_) {
         }
@@ -253,7 +216,7 @@ export default {
         try {
             const node = searchReactParents(
                 getReactInstance(element),
-                n => n.stateNode && n.stateNode.props && n.stateNode.props.message
+                (n) => n.stateNode && n.stateNode.props && n.stateNode.props.message,
             );
             msgObject = node.stateNode.props.message;
         } catch (_) {
@@ -267,7 +230,7 @@ export default {
         try {
             const node = searchReactParents(
                 getReactInstance(element),
-                n => n.stateNode && n.stateNode.props && n.stateNode.props.data
+                (n) => n.stateNode && n.stateNode.props && n.stateNode.props.data,
             );
             apolloComponent = node.stateNode.props;
         } catch (_) {
@@ -277,31 +240,31 @@ export default {
     },
 
     getUserIsModeratorFromTagsBadges(badges) {
-        if (!badges) return false;
-        badges = Array.isArray(badges) ? badges.map(b => b.id) : Object.keys(badges);
-        return badges.includes('moderator') ||
-            badges.includes('broadcaster') ||
-            badges.includes('global_mod') ||
-            badges.includes('admin') ||
-            badges.includes('staff');
+        if (!badges) { return false; }
+        badges = Array.isArray(badges) ? badges.map((b) => b.id) : Object.keys(badges);
+        return badges.includes("moderator") ||
+            badges.includes("broadcaster") ||
+            badges.includes("global_mod") ||
+            badges.includes("admin") ||
+            badges.includes("staff");
     },
 
     getUserIsOwnerFromTagsBadges(badges) {
-        if (!badges) return false;
-        badges = Array.isArray(badges) ? badges.map(b => b.id) : Object.keys(badges);
-        return badges.includes('broadcaster') ||
-            badges.includes('global_mod') ||
-            badges.includes('admin') ||
-            badges.includes('staff');
+        if (!badges) { return false; }
+        badges = Array.isArray(badges) ? badges.map((b) => b.id) : Object.keys(badges);
+        return badges.includes("broadcaster") ||
+            badges.includes("global_mod") ||
+            badges.includes("admin") ||
+            badges.includes("staff");
     },
 
     getCurrentUserIsOwner() {
         const currentChat = this.getCurrentChat();
-        if (!currentChat) return false;
+        if (!currentChat) { return false; }
         return currentChat.props.isOwnChannel || false;
     },
 
     isDarkTheme() {
         return document.body.classList.contains("tw-theme--dark");
-    }
+    },
 };

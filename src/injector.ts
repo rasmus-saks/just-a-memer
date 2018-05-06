@@ -1,6 +1,7 @@
+declare const chrome: any;
 const s = document.createElement("script");
 s.src = chrome.extension.getURL("/dist/jam.js");
-s.onload = function () {
+s.onload = function() {
     this.remove();
 };
 (document.head || document.documentElement).appendChild(s);
