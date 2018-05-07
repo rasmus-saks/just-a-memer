@@ -8,4 +8,4 @@ jobs:
       - run: yarn install
       - run: yarn run gulp package
       - store_artifacts:
-        path: ./extension.zip
+          path: ./extension.zip
