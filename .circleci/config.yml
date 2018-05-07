@@ -15,6 +15,6 @@ jobs:
       - store_artifacts:
           path: ./extension.zip
       - save_cache:
-          key: - jam-v1-{{ .Branch }}-{{ .Revision }}
+          key: jam-v1-{{ .Branch }}-{{ .Revision }}
           paths:
             - "./node_modules"
