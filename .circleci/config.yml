@@ -4,8 +4,17 @@ jobs:
     docker:
       - image: node:8
     steps:
+      - restore_cache:
+          keys:
+            - jam-v1-{{ .Branch }}-{{ .Revision }}
+            - jam-v1-{{ .Branch }}
+            - jam-v1
       - checkout
       - run: yarn install
       - run: yarn run gulp package
       - store_artifacts:
           path: ./extension.zip
+      - save_cache:
+          key: - jam-v1-{{ .Branch }}-{{ .Revision }}
+          paths:
+            - "./node_modules"
